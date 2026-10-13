@@ -30,11 +30,12 @@ describe('useFinanceStore CRUD and actions', () => {
     expect(addRes.ok).toBe(true)
 
     if (addRes.ok) {
-      expect(store.totalActiveWishlist).toBe(300_000)
-      store.toggleWishlistItem(addRes.value.id)
+      expect(addRes.value.selected).toBe(false)
       expect(store.totalActiveWishlist).toBe(0)
       store.toggleWishlistItem(addRes.value.id)
       expect(store.totalActiveWishlist).toBe(300_000)
+      store.toggleWishlistItem(addRes.value.id)
+      expect(store.totalActiveWishlist).toBe(0)
 
       store.removeWishlistItem(addRes.value.id)
       expect(store.state.wishlist).toHaveLength(0)

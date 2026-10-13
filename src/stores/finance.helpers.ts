@@ -55,7 +55,7 @@ export function validateAndCreateWishlist(
   }
   return {
     ok: true,
-    value: { id: createId(), title, price, selected: true },
+    value: { id: createId(), title, price, selected: false },
   }
 }
 

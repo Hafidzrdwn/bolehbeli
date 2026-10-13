@@ -4,6 +4,7 @@ import NeedsSection from '@/features/needs/NeedsSection.vue'
 import AppHeader from '@/features/overview/AppHeader.vue'
 import BalanceCard from '@/features/overview/BalanceCard.vue'
 import TargetDatePicker from '@/features/overview/TargetDatePicker.vue'
+import WishlistSection from '@/features/wishlist/WishlistSection.vue'
 
 usePwaUpdate()
 </script>
@@ -16,6 +17,7 @@ usePwaUpdate()
       <BalanceCard />
       <TargetDatePicker />
       <NeedsSection />
+      <WishlistSection />
     </main>
   </div>
 </template>
