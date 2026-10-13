@@ -8,6 +8,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { usePwaUpdate } from '@/composables/usePwaUpdate'
+
+usePwaUpdate()
 </script>
 
 <template>
