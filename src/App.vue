@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { usePwaUpdate } from '@/composables/usePwaUpdate'
-import NeedsSection from '@/features/needs/NeedsSection.vue'
-import AppHeader from '@/features/overview/AppHeader.vue'
-import BalanceCard from '@/features/overview/BalanceCard.vue'
-import TargetDatePicker from '@/features/overview/TargetDatePicker.vue'
-import WishlistSection from '@/features/wishlist/WishlistSection.vue'
+import { usePwaUpdate } from './composables/usePwaUpdate'
+import DecisionHub from './features/decision/DecisionHub.vue'
+import NeedsSection from './features/needs/NeedsSection.vue'
+import AppHeader from './features/overview/AppHeader.vue'
+import BalanceCard from './features/overview/BalanceCard.vue'
+import TargetDatePicker from './features/overview/TargetDatePicker.vue'
+import WishlistSection from './features/wishlist/WishlistSection.vue'
 
 usePwaUpdate()
 </script>
@@ -18,6 +19,7 @@ usePwaUpdate()
       <TargetDatePicker />
       <NeedsSection />
       <WishlistSection />
+      <DecisionHub />
     </main>
   </div>
 </template>
