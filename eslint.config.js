@@ -21,6 +21,7 @@ export default ts.config(
   {
     files: ['**/*.{js,mjs,cjs,ts,vue}'],
     rules: {
+      'no-undef': 'off',
       'vue/no-v-html': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
       'no-console': 'warn',
