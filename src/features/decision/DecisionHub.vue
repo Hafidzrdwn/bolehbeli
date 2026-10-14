@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
+import { Wallet } from '@lucide/vue'
+import EmptyState from '@/components/shared/EmptyState.vue'
 import { Card } from '@/components/ui/card'
 import { formatDateID } from '@/lib/date'
 import { buildAllocation } from '@/lib/finance/allocation'
@@ -16,6 +18,13 @@ const { state, decisionResult, totalNeeds, totalActiveWishlist } = storeToRefs(s
 
 const rootEl = ref<HTMLElement | null>(null)
 defineExpose({ el: rootEl })
+
+const isFreshState = computed(
+  () =>
+    state.value.currentBalance === 0 &&
+    state.value.needs.length === 0 &&
+    state.value.wishlist.length === 0,
+)
 
 const allocation = computed(() =>
   buildAllocation({
@@ -64,42 +73,51 @@ const sisaTone = computed<'safe' | 'warning' | 'danger' | 'neutral'>(() => {
 <template>
   <section ref="rootEl" aria-label="Hasil Analisis Belanja" class="w-full">
     <Card class="gap-5 border-primary/30 bg-accent p-4 text-accent-foreground shadow-sm sm:p-6">
-      <DecisionStatusBanner
-        :status="decisionResult.status"
-        :message="decisionResult.message"
+      <EmptyState
+        v-if="isFreshState"
+        :icon="Wallet"
+        title="Mulai dari saldo"
+        description="Masukkan saldo uangmu saat ini di atas untuk mulai menghitung jatah harian dan mensimulasikan belanja."
       />
 
-      <div class="rounded-xl border border-border/50 bg-card/80 p-3 sm:p-4">
-        <MetricCompareRow
-          label="Jatah per hari"
-          :from="decisionResult.daily0"
-          :to="decisionResult.dailyFinal"
-          :diff-text="dailyDropText"
-          :tone="dailyTone"
-          :has-selection="decisionResult.hasSelection"
-          unit="/hari"
+      <template v-else>
+        <DecisionStatusBanner
+          :status="decisionResult.status"
+          :message="decisionResult.message"
         />
 
-        <MetricCompareRow
-          :label="sisaLabel"
-          :from="decisionResult.sisa0"
-          :to="decisionResult.sisaFinal"
-          :diff-text="sisaDropText"
-          :tone="sisaTone"
-          :has-selection="decisionResult.hasSelection"
+        <div class="rounded-xl border border-border/50 bg-card/80 p-3 sm:p-4">
+          <MetricCompareRow
+            label="Jatah per hari"
+            :from="decisionResult.daily0"
+            :to="decisionResult.dailyFinal"
+            :diff-text="dailyDropText"
+            :tone="dailyTone"
+            :has-selection="decisionResult.hasSelection"
+            unit="/hari"
+          />
+
+          <MetricCompareRow
+            :label="sisaLabel"
+            :from="decisionResult.sisa0"
+            :to="decisionResult.sisaFinal"
+            :diff-text="sisaDropText"
+            :tone="sisaTone"
+            :has-selection="decisionResult.hasSelection"
+          />
+        </div>
+
+        <SanityMeter
+          :allocation="allocation"
+          :buffer="decisionResult.buffer"
         />
-      </div>
 
-      <SanityMeter
-        :allocation="allocation"
-        :buffer="decisionResult.buffer"
-      />
-
-      <DecisionInsight
-        :equivalent-days="decisionResult.equivalentDays"
-        :has-selection="decisionResult.hasSelection"
-        :balance="state.currentBalance"
-      />
+        <DecisionInsight
+          :equivalent-days="decisionResult.equivalentDays"
+          :has-selection="decisionResult.hasSelection"
+          :balance="state.currentBalance"
+        />
+      </template>
     </Card>
   </section>
 </template>
