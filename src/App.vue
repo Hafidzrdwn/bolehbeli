@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, ref } from 'vue'
+import { computed, defineAsyncComponent, ref, watch } from 'vue'
 import AppShell from './components/layout/AppShell.vue'
 import SegmentedControl from './components/layout/SegmentedControl.vue'
 import { useLayoutMode } from './composables/useLayoutMode'
-import DecisionHub from './features/decision/DecisionHub.vue'
+import DecisionDock from './features/decision/DecisionDock.vue'
+import DecisionPanel from './features/decision/DecisionPanel.vue'
 import NeedsSection from './features/needs/NeedsSection.vue'
 import AppHeader from './features/overview/AppHeader.vue'
 import BalanceHero from './features/overview/BalanceHero.vue'
@@ -11,7 +12,9 @@ import TargetDateChip from './features/overview/TargetDateChip.vue'
 import WishlistSection from './features/wishlist/WishlistSection.vue'
 import { useFinanceStore } from './stores/finance'
 
-import StickyDecisionBar from './features/decision/StickyDecisionBar.vue'
+const DecisionSheet = defineAsyncComponent(
+  () => import('./features/decision/DecisionSheet.vue'),
+)
 
 const InstallBanner = defineAsyncComponent(
   () => import('./features/pwa/InstallBanner.vue'),
@@ -29,8 +32,13 @@ const tabOptions = computed(() => [
   { value: 'wishlist', label: 'Wishlist', count: store.state.wishlist.length },
 ])
 
-const hubRef = ref<InstanceType<typeof DecisionHub> | null>(null)
-const hubElement = computed(() => hubRef.value?.el ?? null)
+const isSheetOpen = ref(false)
+
+watch(layoutMode, (mode) => {
+  if (mode === 'desktop') {
+    isSheetOpen.value = false
+  }
+})
 </script>
 
 <template>
@@ -63,11 +71,15 @@ const hubElement = computed(() => hubRef.value?.el ?? null)
       </div>
     </div>
 
-    <template #aside>
-      <DecisionHub ref="hubRef" class="lg:sticky lg:top-6" />
+    <template v-if="layoutMode === 'desktop'" #aside>
+      <DecisionPanel class="lg:sticky lg:top-8" />
     </template>
   </AppShell>
 
-  <StickyDecisionBar v-if="layoutMode !== 'desktop'" :target="hubElement" />
+  <template v-if="layoutMode !== 'desktop'">
+    <DecisionDock @open="isSheetOpen = true" />
+    <DecisionSheet v-model:open="isSheetOpen" />
+  </template>
+
   <UpdateToast />
 </template>

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { MAX_AMOUNT } from '@/lib/constants'
-import { clampAmount, formatDigits, formatIDR, parseRupiah } from '@/lib/money'
+import { clampAmount, formatCompactIDR, formatDigits, formatIDR, parseRupiah } from '@/lib/money'
 
 describe('parseRupiah', () => {
   it('parses formatted rupiah and numbers correctly', () => {
@@ -62,5 +62,41 @@ describe('clampAmount', () => {
     expect(clampAmount(100.99)).toBe(100)
     expect(clampAmount(100_000_000_000)).toBe(MAX_AMOUNT)
     expect(clampAmount(Number.NaN)).toBe(0)
+  })
+})
+
+describe('formatCompactIDR', () => {
+  it('formats values under 1000 in full', () => {
+    expect(formatCompactIDR(950)).toBe('Rp 950')
+    expect(formatCompactIDR(999)).toBe('Rp 999')
+    expect(formatCompactIDR(0)).toBe('Rp 0')
+  })
+
+  it('formats thousands as whole number with rb suffix', () => {
+    expect(formatCompactIDR(1_000)).toBe('Rp 1 rb')
+    expect(formatCompactIDR(53_333)).toBe('Rp 53 rb')
+    expect(formatCompactIDR(53_900)).toBe('Rp 54 rb')
+  })
+
+  it('formats millions with at most one decimal and no trailing zero', () => {
+    expect(formatCompactIDR(1_500_000)).toBe('Rp 1,5 jt')
+    expect(formatCompactIDR(2_000_000)).toBe('Rp 2 jt')
+  })
+
+  it('bumps boundary values to next unit', () => {
+    expect(formatCompactIDR(999_999_999)).toBe('Rp 1 M')
+    expect(formatCompactIDR(999_999)).toBe('Rp 1 jt')
+  })
+
+  it('formats billions with M suffix', () => {
+    expect(formatCompactIDR(2_000_000_000)).toBe('Rp 2 M')
+    expect(formatCompactIDR(2_500_000_000)).toBe('Rp 2,5 M')
+  })
+
+  it('handles negative numbers with leading minus', () => {
+    expect(formatCompactIDR(-999)).toBe('-Rp 999')
+    expect(formatCompactIDR(-53_333)).toBe('-Rp 53 rb')
+    expect(formatCompactIDR(-1_500_000)).toBe('-Rp 1,5 jt')
+    expect(formatCompactIDR(-2_000_000_000)).toBe('-Rp 2 M')
   })
 })

@@ -23,12 +23,11 @@ const ariaLabel = computed(() => {
     <div
       role="img"
       :aria-label="ariaLabel"
-      class="relative flex h-5 w-full overflow-hidden rounded-full bg-muted/70 p-0.5 sm:h-6 [&>div]:h-full [&>div]:transition-[width] [&>div]:motion-safe:duration-300"
+      class="relative flex h-2 w-full overflow-hidden rounded-full bg-muted/70 [&>div]:h-full [&>div]:transition-[width] [&>div]:motion-safe:duration-200"
     >
       <div
         v-if="allocation.needsPct > 0"
-        class="rounded-l-full bg-muted-foreground/80"
-        :class="{ 'rounded-r-full': allocation.wishlistPct === 0 && allocation.remainingPct === 0 }"
+        class="bg-muted-foreground/80"
         :style="{ width: `${allocation.needsPct}%` }"
         :title="`Kebutuhan: ${allocation.needsPct}%`"
       />
@@ -36,25 +35,27 @@ const ariaLabel = computed(() => {
       <div
         v-if="allocation.wishlistPct > 0"
         class="bg-primary"
-        :class="{
-          'rounded-l-full': allocation.needsPct === 0,
-          'rounded-r-full': allocation.remainingPct === 0,
-        }"
         :style="{ width: `${allocation.wishlistPct}%` }"
         :title="`Belanja: ${allocation.wishlistPct}%`"
       />
 
       <div
         v-if="!allocation.deficit && allocation.remainingPct > 0"
-        class="rounded-r-full bg-safe"
-        :class="{ 'rounded-l-full': allocation.needsPct === 0 && allocation.wishlistPct === 0 }"
+        class="bg-safe"
         :style="{ width: `${allocation.remainingPct}%` }"
         :title="`Sisa: ${allocation.remainingPct}%`"
       />
 
       <div
+        v-if="allocation.deficit"
+        class="bg-danger"
+        :style="{ width: '100%' }"
+        :title="`Defisit: ${formatIDR(allocation.shortfall)}`"
+      />
+
+      <div
         v-if="allocation.bufferMarkerPct > 0 && allocation.bufferMarkerPct < 100"
-        class="absolute top-0 bottom-0 z-10 w-0.5 bg-foreground/90 shadow-xs"
+        class="absolute top-0 bottom-0 z-10 w-0.5 bg-foreground/90"
         :style="{ left: `${allocation.bufferMarkerPct}%` }"
         aria-hidden="true"
         :title="`Batas Buffer: ${formatIDR(buffer)}`"

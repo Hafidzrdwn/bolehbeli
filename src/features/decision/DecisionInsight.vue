@@ -29,7 +29,7 @@ const insightText = computed(() => {
 <template>
   <div
     v-if="insightText"
-    class="flex items-center gap-2.5 rounded-lg border border-border/50 bg-card/60 p-3 text-xs sm:text-sm text-foreground/90 transition-colors"
+    class="flex items-center gap-2.5 rounded-xl bg-muted/50 p-3 text-xs sm:text-sm text-foreground/90"
   >
     <CheckCircle2 class="size-4 shrink-0 text-primary" aria-hidden="true" />
     <p class="leading-relaxed">

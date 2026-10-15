@@ -1,9 +1,12 @@
 import { createPinia, setActivePinia } from 'pinia'
+import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { buildAllocation } from '@/lib/finance/allocation'
 import { useFinanceStore } from '@/stores/finance'
+import DecisionDock from './DecisionDock.vue'
+import DecisionPanel from './DecisionPanel.vue'
 
-describe('DecisionHub: Golden Vectors A-C', () => {
+describe('DecisionPanel: Golden Vectors A-C', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     localStorage.clear()
@@ -46,7 +49,7 @@ describe('DecisionHub: Golden Vectors A-C', () => {
   })
 })
 
-describe('DecisionHub: Golden Vectors D-E', () => {
+describe('DecisionPanel: Golden Vectors D-E', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     localStorage.clear()
@@ -86,5 +89,36 @@ describe('DecisionHub: Golden Vectors D-E', () => {
     })
     expect(allocation.deficit).toBe(true)
     expect(allocation.shortfall).toBe(100_000)
+  })
+})
+
+describe('DecisionPanel & DecisionDock accessibility', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    localStorage.clear()
+  })
+
+  it('renders single role="status" live region strictly inside DecisionHeadline', () => {
+    const store = useFinanceStore()
+    store.setBalance(3_000_000)
+    const wrapper = mount(DecisionPanel)
+
+    const statusRegions = wrapper.findAll('[role="status"]')
+    expect(statusRegions).toHaveLength(1)
+    expect(statusRegions[0]?.attributes('aria-live')).toBe('polite')
+    expect(statusRegions[0]?.attributes('aria-atomic')).toBe('true')
+    expect(wrapper.attributes('data-status')).toBe('idle')
+  })
+
+  it('renders DecisionDock without live region and emits open on click', async () => {
+    const store = useFinanceStore()
+    store.setBalance(3_000_000)
+    const wrapper = mount(DecisionDock)
+
+    expect(wrapper.findAll('[role="status"]')).toHaveLength(0)
+    const button = wrapper.find('button')
+    expect(button.attributes('aria-label')).toContain('Lihat hasil:')
+    await button.trigger('click')
+    expect(wrapper.emitted('open')).toHaveLength(1)
   })
 })
