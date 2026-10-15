@@ -24,6 +24,13 @@ const { title, amount, error, submit } = useItemForm(
   () => {
     document.getElementById('wishlist-title-input')?.focus()
   },
+  (err) => {
+    if (err === 'TITLE_EMPTY') {
+      document.getElementById('wishlist-title-input')?.focus()
+    } else if (err === 'AMOUNT_INVALID') {
+      document.getElementById('wishlist-price-input')?.focus()
+    }
+  },
 )
 
 const hasError = computed(() => Boolean(error.value))

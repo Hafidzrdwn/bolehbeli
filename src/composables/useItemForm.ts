@@ -12,9 +12,23 @@ export interface ItemFormSubmitData {
   amount: number
 }
 
+function applySubmitError(
+  res: Result<unknown> | undefined,
+  errorRef: { value: string | null },
+  onError?: (error: ValidationError) => void,
+) {
+  const errCode = res && !res.ok ? res.error : 'TITLE_EMPTY'
+  errorRef.value = ERROR_MESSAGES[errCode] ?? 'Input tidak valid'
+  if (onError) {
+    nextTick(() => onError(errCode))
+  }
+  return res ?? { ok: false as const, error: errCode }
+}
+
 export function useItemForm<T>(
   onSubmit: (data: ItemFormSubmitData) => Result<T>,
   onSuccess?: () => void,
+  onError?: (error: ValidationError) => void,
 ) {
   const title = ref('')
   const amount = ref<number | null>(null)
@@ -22,22 +36,15 @@ export function useItemForm<T>(
 
   function submit(): Result<T> {
     error.value = null
-    const res = onSubmit({
-      title: title.value,
-      amount: amount.value ?? 0,
-    })
+    const res = onSubmit({ title: title.value, amount: amount.value ?? 0 })
 
-    if (!res.ok) {
-      error.value = ERROR_MESSAGES[res.error]
-      return res
+    if (!res || !res.ok) {
+      return applySubmitError(res, error, onError) as Result<T>
     }
 
     title.value = ''
     amount.value = null
-    if (onSuccess) {
-      nextTick(onSuccess)
-    }
-
+    if (onSuccess) nextTick(onSuccess)
     return res
   }
 

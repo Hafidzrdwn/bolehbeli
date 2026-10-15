@@ -44,14 +44,14 @@ const inputId = computed(() => `wishlist-switch-${props.item.id}`)
     >
       <Switch
         :id="inputId"
-        :checked="item.selected"
+        :model-value="item.selected"
         :aria-label="switchAriaLabel"
         class="shrink-0"
         @click.stop
-        @update:checked="emits('toggle', item.id)"
+        @update:model-value="emits('toggle', item.id)"
       />
 
-      <div class="min-w-0 flex-1">
+      <div class="min-w-0 flex-1" @click.prevent="emits('toggle', item.id)">
         <p class="truncate text-sm font-medium text-foreground" :title="item.title">
           {{ item.title }}
         </p>

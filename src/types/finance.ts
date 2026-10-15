@@ -41,6 +41,7 @@ export interface DecisionMessage {
   emoji: string
   headline: string
   detail: string
+  tone: DecisionStatus | 'idle'
 }
 
 export interface DecisionResult {

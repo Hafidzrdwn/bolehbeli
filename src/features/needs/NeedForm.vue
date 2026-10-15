@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useItemForm } from '@/composables/useItemForm'
-import type { ExpenseCategory, ExpenseItem, Result } from '@/types/finance'
+import { useFinanceStore } from '@/stores/finance'
+import type { ExpenseCategory } from '@/types/finance'
 
 interface Props {
   category?: ExpenseCategory
@@ -21,19 +22,33 @@ const emits = defineEmits<{
   (
     e: 'submit',
     payload: { title: string; amount: number; category: ExpenseCategory },
-  ): Result<ExpenseItem>
+  ): void
 }>()
+
+const store = useFinanceStore()
 
 const { title, amount, error, submit } = useItemForm(
   ({ title: itemTitle, amount: itemAmount }) => {
-    return emits('submit', {
+    const payload = {
       title: itemTitle,
       amount: itemAmount,
       category: props.category,
-    })
+    }
+    const res = store.addNeed(payload)
+    if (res.ok) {
+      emits('submit', payload)
+    }
+    return res
   },
   () => {
     document.getElementById('need-title-input')?.focus()
+  },
+  (err) => {
+    if (err === 'TITLE_EMPTY') {
+      document.getElementById('need-title-input')?.focus()
+    } else if (err === 'AMOUNT_INVALID') {
+      document.getElementById('need-amount-input')?.focus()
+    }
   },
 )
 

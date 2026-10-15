@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
+import { ref, type HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 
 const props = defineProps<{
@@ -8,10 +8,17 @@ const props = defineProps<{
 }>()
 
 const modelValue = defineModel<string | number>()
+const inputRef = ref<HTMLInputElement | null>(null)
+
+defineExpose({
+  focus: () => inputRef.value?.focus(),
+  $el: inputRef,
+})
 </script>
 
 <template>
   <input
+    ref="inputRef"
     v-model="modelValue"
     data-slot="input"
     :class="cn(

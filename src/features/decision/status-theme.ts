@@ -1,12 +1,19 @@
 import type { DecisionStatus } from '@/types/finance'
 
+export type DecisionTone = DecisionStatus | 'idle'
+
 export interface StatusThemeConfig {
   bannerClass: string
   headlineClass: string
   detailClass: string
 }
 
-export const STATUS_THEME_MAP: Record<DecisionStatus, StatusThemeConfig> = {
+export const STATUS_THEME_MAP: Record<DecisionTone, StatusThemeConfig> = {
+  idle: {
+    bannerClass: 'bg-muted/50 border-border text-foreground',
+    headlineClass: 'text-foreground',
+    detailClass: 'text-muted-foreground',
+  },
   safe: {
     bannerClass: 'bg-safe/15 border-safe text-safe-foreground',
     headlineClass: 'text-safe-foreground',

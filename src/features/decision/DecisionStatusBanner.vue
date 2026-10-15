@@ -11,13 +11,13 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const theme = computed(() => STATUS_THEME_MAP[props.status])
+const theme = computed(() => STATUS_THEME_MAP[props.message.tone])
 </script>
 
 <template>
   <Transition name="banner-fade" mode="out-in">
     <div
-      :key="`${status}-${message.headline}`"
+      :key="`${message.tone}-${message.headline}`"
       role="status"
       aria-live="polite"
       aria-atomic="true"
@@ -47,7 +47,7 @@ const theme = computed(() => STATUS_THEME_MAP[props.status])
         </div>
       </div>
 
-      <div class="shrink-0">
+      <div v-if="message.tone !== 'idle'" class="shrink-0">
         <StatusBadge :status="status" />
       </div>
     </div>

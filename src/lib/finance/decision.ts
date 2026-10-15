@@ -88,18 +88,14 @@ function determineStatusAndReasons(
   }
 }
 
-export function evaluateDecision(input: DecisionInput): DecisionResult {
-  const buffer = resolveBuffer(input.balance, input.bufferThreshold)
-  const m = computeMetrics(input, buffer)
-  const { status, reasons } = determineStatusAndReasons(
-    m.sisaFinal,
-    buffer,
-    m.daily0,
-    m.dailyFinal,
-    input.minDailyBudget,
-  )
-
-  const message = buildMessage({
+function createDecisionMessage(
+  input: DecisionInput,
+  status: DecisionStatus,
+  reasons: DecisionReason[],
+  m: ReturnType<typeof computeMetrics>,
+  buffer: number,
+) {
+  return buildMessage({
     status,
     reasons,
     hasSelection: m.hasSelection,
@@ -111,7 +107,23 @@ export function evaluateDecision(input: DecisionInput): DecisionResult {
     dailyDropPercent: m.dailyDropPercent,
     shortfall: m.shortfall,
     needsTotal: input.needsTotal,
+    balance: input.balance,
+    wishlistTotal: input.wishlistTotal,
+    daily0: m.daily0,
   })
+}
+
+export function evaluateDecision(input: DecisionInput): DecisionResult {
+  const buffer = resolveBuffer(input.balance, input.bufferThreshold)
+  const m = computeMetrics(input, buffer)
+  const { status, reasons } = determineStatusAndReasons(
+    m.sisaFinal,
+    buffer,
+    m.daily0,
+    m.dailyFinal,
+    input.minDailyBudget,
+  )
+  const message = createDecisionMessage(input, status, reasons, m, buffer)
 
   return {
     status,

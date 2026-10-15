@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useRupiahInput } from '@/composables/useRupiahInput'
 import { cn } from '@/lib/utils'
 
@@ -19,6 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const modelValue = defineModel<number | null>({ default: null })
+const inputRef = ref<HTMLInputElement | null>(null)
 
 const { displayValue, handleInput } = useRupiahInput(
   modelValue,
@@ -26,6 +28,10 @@ const { displayValue, handleInput } = useRupiahInput(
     modelValue.value = val
   },
 )
+
+defineExpose({
+  focus: () => inputRef.value?.focus(),
+})
 </script>
 
 <template>
@@ -48,6 +54,7 @@ const { displayValue, handleInput } = useRupiahInput(
     </span>
     <input
       :id="id"
+      ref="inputRef"
       type="text"
       inputmode="numeric"
       autocomplete="off"

@@ -8,7 +8,7 @@ import NeedList from '@/features/needs/NeedList.vue'
 import NeedPresetChips from '@/features/needs/NeedPresetChips.vue'
 import type { NeedPreset } from '@/lib/finance/presets'
 import { useFinanceStore } from '@/stores/finance'
-import type { ExpenseCategory, ExpenseItem, Result } from '@/types/finance'
+import type { ExpenseCategory } from '@/types/finance'
 
 const store = useFinanceStore()
 const { state, totalNeeds } = storeToRefs(store)
@@ -25,16 +25,8 @@ function handleSelectPreset(preset: NeedPreset): void {
   formRef.value?.focusAmount()
 }
 
-function handleAddNeed(payload: {
-  title: string
-  amount: number
-  category: ExpenseCategory
-}): Result<ExpenseItem> {
-  const res = store.addNeed(payload)
-  if (res.ok) {
-    activePreset.value = null
-  }
-  return res
+function handleAddNeed(): void {
+  activePreset.value = null
 }
 
 function handleRemoveNeed(id: string): void {

@@ -25,8 +25,7 @@ describe('DecisionHub: Golden Vectors A-C', () => {
     const store = useFinanceStore()
     store.setBalance(3_000_000)
     store.addNeed({ title: 'Kebutuhan', amount: 1_500_000 })
-    const addRes = store.addWishlistItem({ title: 'Barang B', price: 600_000 })
-    if (addRes.ok) store.toggleWishlistItem(addRes.value.id)
+    store.addWishlistItem({ title: 'Barang B', price: 600_000 })
 
     const res = store.decisionResult
     expect(res.status).toBe('safe')
@@ -38,8 +37,7 @@ describe('DecisionHub: Golden Vectors A-C', () => {
     const store = useFinanceStore()
     store.setBalance(3_000_000)
     store.addNeed({ title: 'Kebutuhan', amount: 1_500_000 })
-    const addRes = store.addWishlistItem({ title: 'Barang C', price: 700_000 })
-    if (addRes.ok) store.toggleWishlistItem(addRes.value.id)
+    store.addWishlistItem({ title: 'Barang C', price: 700_000 })
 
     const res = store.decisionResult
     expect(res.status).toBe('warning')
@@ -58,8 +56,7 @@ describe('DecisionHub: Golden Vectors D-E', () => {
     const store = useFinanceStore()
     store.setBalance(3_000_000)
     store.addNeed({ title: 'Kebutuhan', amount: 1_500_000 })
-    const addRes = store.addWishlistItem({ title: 'Barang D', price: 1_300_000 })
-    if (addRes.ok) store.toggleWishlistItem(addRes.value.id)
+    store.addWishlistItem({ title: 'Barang D', price: 1_300_000 })
 
     const res = store.decisionResult
     expect(res.status).toBe('warning')
@@ -73,8 +70,7 @@ describe('DecisionHub: Golden Vectors D-E', () => {
     const store = useFinanceStore()
     store.setBalance(3_000_000)
     store.addNeed({ title: 'Kebutuhan', amount: 1_500_000 })
-    const addRes = store.addWishlistItem({ title: 'Barang E', price: 1_600_000 })
-    if (addRes.ok) store.toggleWishlistItem(addRes.value.id)
+    store.addWishlistItem({ title: 'Barang E', price: 1_600_000 })
 
     const res = store.decisionResult
     expect(res.status).toBe('danger')
