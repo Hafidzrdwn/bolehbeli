@@ -27,9 +27,9 @@ defineExpose({ headingId })
 <template>
   <Card
     :aria-labelledby="headingId"
-    :class="cn('rounded-xl border border-border bg-card shadow-xs', props.class)"
+    :class="cn('border border-border/50 bg-card/80 rounded-2xl', props.class)"
   >
-    <CardHeader class="flex flex-row items-start justify-between gap-4 p-4 pb-2 sm:p-6 sm:pb-3">
+    <CardHeader class="flex flex-row items-start justify-between gap-4 p-4 pb-2 sm:p-5 sm:pb-3">
       <div class="space-y-1">
         <CardTitle :id="headingId" as="h2" class="text-base font-semibold tracking-tight sm:text-lg">
           {{ title }}
@@ -42,7 +42,7 @@ defineExpose({ headingId })
         <slot name="action" />
       </div>
     </CardHeader>
-    <CardContent class="p-4 pt-2 sm:p-6 sm:pt-3">
+    <CardContent class="p-4 pt-2 sm:p-5 sm:pt-3">
       <slot />
     </CardContent>
   </Card>

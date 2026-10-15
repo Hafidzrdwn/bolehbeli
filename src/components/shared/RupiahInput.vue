@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRupiahInput } from '@/composables/useRupiahInput'
 import { cn } from '@/lib/utils'
 
@@ -8,6 +8,7 @@ interface Props {
   placeholder?: string
   invalid?: boolean
   disabled?: boolean
+  variant?: 'default' | 'hero'
   class?: string
 }
 
@@ -16,6 +17,7 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: '0',
   invalid: false,
   disabled: false,
+  variant: 'default',
   class: undefined,
 })
 
@@ -29,8 +31,11 @@ const { displayValue, handleInput } = useRupiahInput(
   },
 )
 
+const isHero = computed(() => props.variant === 'hero')
+
 defineExpose({
   focus: () => inputRef.value?.focus(),
+  select: () => inputRef.value?.select(),
 })
 </script>
 
@@ -38,9 +43,11 @@ defineExpose({
   <div
     :class="
       cn(
-        'group flex h-11 w-full items-center rounded-lg border bg-background px-3 transition-colors',
-        'border-input focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/50',
-        invalid && 'border-danger focus-within:border-danger focus-within:ring-danger/40',
+        'group flex w-full items-center transition-[background-color,box-shadow]',
+        !isHero && 'field h-11 pointer-fine:h-10 px-3.5',
+        isHero &&
+          'h-auto rounded-xl bg-transparent px-2 py-1 hover:bg-transparent focus-within:bg-[color-mix(in_oklab,var(--foreground)_8%,transparent)] focus-within:ring-2 focus-within:ring-ring/45',
+        invalid && 'ring-2 ring-danger',
         disabled && 'cursor-not-allowed opacity-50',
         props.class,
       )
@@ -48,7 +55,13 @@ defineExpose({
   >
     <span
       aria-hidden="true"
-      class="mr-2 text-sm font-semibold select-none text-muted-foreground group-focus-within:text-foreground"
+      :class="
+        cn(
+          'select-none text-muted-foreground group-focus-within:text-foreground',
+          !isHero && 'mr-2 text-sm font-semibold',
+          isHero && 'mr-2 text-title font-semibold',
+        )
+      "
     >
       Rp
     </span>
@@ -63,7 +76,13 @@ defineExpose({
       :disabled="disabled"
       :value="displayValue"
       :aria-invalid="invalid"
-      class="h-full w-full bg-transparent text-base font-medium tabular-nums outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed"
+      :class="
+        cn(
+          'w-full bg-transparent tabular-nums outline-none disabled:cursor-not-allowed',
+          !isHero && 'h-full text-base font-medium',
+          isHero && 'text-display font-semibold',
+        )
+      "
       @input="handleInput"
     />
   </div>

@@ -8,7 +8,7 @@ const INDEX_HTML = path.join(DIST_DIR, 'index.html')
 const BUDGETS = {
   jsGzipKb: 100,
   cssGzipKb: 15,
-  precacheRawKb: 400,
+  precacheRawKb: 435, // DESIGN_SPEC §2.1 & §9: baseline 400 KB + font variable <= 35 KB
 }
 
 function getGzipSize(filePath) {
