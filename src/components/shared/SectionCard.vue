@@ -1,14 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { createId } from '@/lib/id'
-import { cn } from '@/lib/utils'
+import { useId } from 'vue'
 
 interface Props {
   title: string
@@ -18,32 +9,33 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-
-const headingId = computed(() => props.id ?? `section-heading-${createId()}`)
+const generatedId = useId()
+const headingId = props.id || generatedId
 
 defineExpose({ headingId })
 </script>
 
 <template>
-  <Card
+  <div
     :aria-labelledby="headingId"
-    :class="cn('border border-border/50 bg-card/80 rounded-2xl', props.class)"
+    class="border border-border/50 bg-card/80 rounded-2xl overflow-hidden"
+    :class="props.class"
   >
-    <CardHeader class="flex flex-row items-start justify-between gap-4 p-4 pb-2 sm:p-5 sm:pb-3">
+    <div class="flex flex-row items-start justify-between gap-4 p-4 pb-2 sm:p-5 sm:pb-3">
       <div class="space-y-1">
-        <CardTitle :id="headingId" as="h2" class="text-base font-semibold tracking-tight sm:text-lg">
+        <h2 :id="headingId" class="text-base font-semibold tracking-tight sm:text-lg">
           {{ title }}
-        </CardTitle>
-        <CardDescription v-if="description" class="text-xs text-muted-foreground sm:text-sm">
+        </h2>
+        <p v-if="description" class="text-xs text-muted-foreground sm:text-sm">
           {{ description }}
-        </CardDescription>
+        </p>
       </div>
       <div v-if="$slots.action" class="shrink-0">
         <slot name="action" />
       </div>
-    </CardHeader>
-    <CardContent class="p-4 pt-2 sm:p-5 sm:pt-3">
+    </div>
+    <div class="p-4 pt-2 sm:p-5 sm:pt-3">
       <slot />
-    </CardContent>
-  </Card>
+    </div>
+  </div>
 </template>

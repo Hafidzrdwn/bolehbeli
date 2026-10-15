@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { Wallet } from '@lucide/vue'
+import { Receipt } from '@lucide/vue'
 import EmptyState from '@/components/shared/EmptyState.vue'
-import { Card } from '@/components/ui/card'
 import { formatDateID } from '@/lib/date'
 import { buildAllocation } from '@/lib/finance/allocation'
 import { formatIDR } from '@/lib/money'
@@ -72,10 +71,10 @@ const sisaTone = computed<'safe' | 'warning' | 'danger' | 'neutral'>(() => {
 
 <template>
   <section ref="rootEl" aria-label="Hasil Analisis Belanja" class="w-full">
-    <Card class="gap-5 border-primary/30 bg-accent p-4 text-accent-foreground shadow-sm sm:p-6">
+    <div class="flex flex-col gap-5 rounded-2xl border border-primary/30 bg-accent p-4 text-accent-foreground shadow-sm sm:p-6">
       <EmptyState
         v-if="isFreshState"
-        :icon="Wallet"
+        :icon="Receipt"
         title="Mulai dari saldo"
         description="Masukkan saldo uangmu saat ini di atas untuk mulai menghitung jatah harian dan mensimulasikan belanja."
       />
@@ -118,6 +117,6 @@ const sisaTone = computed<'safe' | 'warning' | 'danger' | 'neutral'>(() => {
           :balance="state.currentBalance"
         />
       </template>
-    </Card>
+    </div>
   </section>
 </template>

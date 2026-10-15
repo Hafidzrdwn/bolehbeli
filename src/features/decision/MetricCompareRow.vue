@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import MoneyText from '@/components/shared/MoneyText.vue'
 
 interface Props {
@@ -12,7 +11,7 @@ interface Props {
   unit?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   to: undefined,
   diffText: undefined,
   tone: 'neutral',
@@ -20,18 +19,12 @@ const props = withDefaults(defineProps<Props>(), {
   unit: undefined,
 })
 
-const badgeClass = computed(() => {
-  switch (props.tone) {
-    case 'safe':
-      return 'bg-safe/15 text-safe-foreground border border-safe/30'
-    case 'warning':
-      return 'bg-warning/15 text-warning-foreground border border-warning/30'
-    case 'danger':
-      return 'bg-danger/15 text-danger-foreground border border-danger/30'
-    default:
-      return 'bg-muted text-muted-foreground border border-border/50'
-  }
-})
+const TONE_CLASSES = {
+  safe: 'bg-safe/15 text-safe-foreground border border-safe/30',
+  warning: 'bg-warning/15 text-warning-foreground border border-warning/30',
+  danger: 'bg-danger/15 text-danger-foreground border border-danger/30',
+  neutral: 'bg-muted text-muted-foreground border border-border/50',
+} as const
 </script>
 
 <template>
@@ -52,7 +45,7 @@ const badgeClass = computed(() => {
         <span
           v-if="diffText"
           class="rounded-md px-1.5 py-0.5 text-xs font-semibold"
-          :class="badgeClass"
+          :class="TONE_CLASSES[tone]"
         >
           {{ diffText }}
         </span>

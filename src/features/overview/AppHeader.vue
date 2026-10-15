@@ -2,7 +2,6 @@
 import { defineAsyncComponent, ref } from 'vue'
 import { Settings } from '@lucide/vue'
 import ThemeToggle from '@/components/shared/ThemeToggle.vue'
-import { Button } from '@/components/ui/button'
 
 const SettingsDialog = defineAsyncComponent(
   () => import('@/features/settings/SettingsDialog.vue'),
@@ -28,15 +27,14 @@ function openSettings() {
       </p>
     </div>
     <div class="flex items-center gap-2">
-      <Button
-        variant="ghost"
-        size="icon"
+      <button
+        type="button"
         aria-label="Buka pengaturan"
-        class="size-9 rounded-full text-muted-foreground hover:text-foreground"
+        class="inline-flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         @click="openSettings"
       >
         <Settings class="size-4" />
-      </Button>
+      </button>
       <ThemeToggle />
     </div>
 

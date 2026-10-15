@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Sparkles } from '@lucide/vue'
+import { CheckCircle2 } from '@lucide/vue'
 
 interface Props {
   equivalentDays: number | null
@@ -12,10 +12,7 @@ const props = defineProps<Props>()
 
 const formattedDays = computed(() => {
   if (props.equivalentDays === null) return null
-  return new Intl.NumberFormat('id-ID', {
-    maximumFractionDigits: 1,
-    minimumFractionDigits: 0,
-  }).format(props.equivalentDays)
+  return props.equivalentDays.toLocaleString('id-ID', { maximumFractionDigits: 1 })
 })
 
 const insightText = computed(() => {
@@ -34,7 +31,7 @@ const insightText = computed(() => {
     v-if="insightText"
     class="flex items-center gap-2.5 rounded-lg border border-border/50 bg-card/60 p-3 text-xs sm:text-sm text-foreground/90 transition-colors"
   >
-    <Sparkles class="size-4 shrink-0 text-primary" aria-hidden="true" />
+    <CheckCircle2 class="size-4 shrink-0 text-primary" aria-hidden="true" />
     <p class="leading-relaxed">
       {{ insightText }}
     </p>

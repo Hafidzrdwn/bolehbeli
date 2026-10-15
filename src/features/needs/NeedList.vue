@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ReceiptText } from '@lucide/vue'
+import { Receipt } from '@lucide/vue'
 import EmptyState from '@/components/shared/EmptyState.vue'
 import NeedListItem from '@/features/needs/NeedListItem.vue'
 import type { ExpenseItem } from '@/types/finance'
@@ -19,7 +19,7 @@ const emits = defineEmits<{
   <div class="space-y-2">
     <EmptyState
       v-if="items.length === 0"
-      :icon="ReceiptText"
+      :icon="Receipt"
       title="Belum ada kebutuhan wajib"
       description="Catat pengeluaran rutinmu di atas atau pilih salah satu preset siap pakai."
     />

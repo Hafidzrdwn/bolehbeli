@@ -1,12 +1,12 @@
-import type { Component } from 'vue'
 import {
+  AlertTriangle,
   Bus,
-  MoreHorizontal,
   Receipt,
-  ShieldAlert,
   Utensils,
 } from '@lucide/vue'
 import type { ExpenseCategory } from '@/types/finance'
+
+import type { Component } from 'vue'
 
 export interface NeedPreset {
   id: string
@@ -35,7 +35,7 @@ export const CATEGORY_META: Record<ExpenseCategory, CategoryMeta> = {
   },
   other: {
     label: 'Lainnya',
-    icon: MoreHorizontal,
+    icon: Receipt,
   },
 }
 
@@ -62,6 +62,6 @@ export const NEED_PRESETS: readonly NeedPreset[] = [
     id: 'buffer',
     label: 'Buffer Darurat',
     category: 'other',
-    icon: ShieldAlert,
+    icon: AlertTriangle,
   },
 ] as const

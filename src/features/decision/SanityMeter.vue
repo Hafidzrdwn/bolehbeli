@@ -23,11 +23,11 @@ const ariaLabel = computed(() => {
     <div
       role="img"
       :aria-label="ariaLabel"
-      class="relative flex h-5 w-full overflow-hidden rounded-full bg-muted/70 p-0.5 sm:h-6"
+      class="relative flex h-5 w-full overflow-hidden rounded-full bg-muted/70 p-0.5 sm:h-6 [&>div]:h-full [&>div]:transition-[width] [&>div]:motion-safe:duration-300"
     >
       <div
         v-if="allocation.needsPct > 0"
-        class="h-full rounded-l-full bg-muted-foreground/80 transition-[width] motion-safe:duration-300"
+        class="rounded-l-full bg-muted-foreground/80"
         :class="{ 'rounded-r-full': allocation.wishlistPct === 0 && allocation.remainingPct === 0 }"
         :style="{ width: `${allocation.needsPct}%` }"
         :title="`Kebutuhan: ${allocation.needsPct}%`"
@@ -35,7 +35,7 @@ const ariaLabel = computed(() => {
 
       <div
         v-if="allocation.wishlistPct > 0"
-        class="h-full bg-primary transition-[width] motion-safe:duration-300"
+        class="bg-primary"
         :class="{
           'rounded-l-full': allocation.needsPct === 0,
           'rounded-r-full': allocation.remainingPct === 0,
@@ -46,7 +46,7 @@ const ariaLabel = computed(() => {
 
       <div
         v-if="!allocation.deficit && allocation.remainingPct > 0"
-        class="h-full rounded-r-full bg-safe transition-[width] motion-safe:duration-300"
+        class="rounded-r-full bg-safe"
         :class="{ 'rounded-l-full': allocation.needsPct === 0 && allocation.wishlistPct === 0 }"
         :style="{ width: `${allocation.remainingPct}%` }"
         :title="`Sisa: ${allocation.remainingPct}%`"

@@ -25,15 +25,8 @@ const isVisible = computed(() => {
 })
 
 function handleTap() {
-  if (!props.target) return
-  const isReducedMotion =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-  props.target.scrollIntoView({
-    behavior: isReducedMotion ? 'auto' : 'smooth',
-    block: 'start',
-  })
+  const reduce = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  props.target?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
 }
 </script>
 

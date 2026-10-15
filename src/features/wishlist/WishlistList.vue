@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ShoppingBag } from '@lucide/vue'
+import { Receipt } from '@lucide/vue'
 import EmptyState from '@/components/shared/EmptyState.vue'
 import WishlistItemRow from '@/features/wishlist/WishlistItemRow.vue'
 import type { WishlistItem } from '@/types/finance'
@@ -21,7 +21,7 @@ const emits = defineEmits<{
   <div>
     <EmptyState
       v-if="items.length === 0"
-      :icon="ShoppingBag"
+      :icon="Receipt"
       title="Belum ada barang incaran"
       description="Tambahkan barang impian di atas untuk mulai mensimulasikan kelayakan belanja."
     />
