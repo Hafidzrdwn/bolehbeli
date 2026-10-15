@@ -13,6 +13,7 @@ const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'remove', id: string): void
+  (e: 'edit', item: ExpenseItem): void
 }>()
 
 const meta = computed(() => CATEGORY_META[props.item.category] ?? CATEGORY_META.other)
@@ -24,6 +25,7 @@ const meta = computed(() => CATEGORY_META[props.item.category] ?? CATEGORY_META.
     :meta="meta.label"
     :amount="item.amount"
     :icon="meta.icon"
+    @edit="emit('edit', item)"
   >
     <template #trailing>
       <button

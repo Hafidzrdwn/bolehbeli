@@ -10,6 +10,7 @@ import AppHeader from './features/overview/AppHeader.vue'
 import BalanceHero from './features/overview/BalanceHero.vue'
 import TargetDateChip from './features/overview/TargetDateChip.vue'
 import WishlistSection from './features/wishlist/WishlistSection.vue'
+import UndoSnackbar from './components/shared/UndoSnackbar.vue'
 import { useFinanceStore } from './stores/finance'
 
 const DecisionSheet = defineAsyncComponent(
@@ -81,5 +82,6 @@ watch(layoutMode, (mode) => {
     <DecisionSheet v-model:open="isSheetOpen" />
   </template>
 
+  <UndoSnackbar />
   <UpdateToast />
 </template>

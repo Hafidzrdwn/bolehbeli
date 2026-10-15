@@ -15,6 +15,7 @@ defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'labelClick', event: MouseEvent): void
+  (e: 'edit'): void
 }>()
 </script>
 
@@ -45,7 +46,16 @@ const emit = defineEmits<{
         </p>
       </label>
 
-      <div v-else class="min-w-0 flex-1">
+      <div
+        v-else
+        class="min-w-0 flex-1 cursor-pointer select-none"
+        role="button"
+        tabindex="0"
+        :aria-label="`Edit ${title}`"
+        @click="emit('edit')"
+        @keydown.enter.prevent="emit('edit')"
+        @keydown.space.prevent="emit('edit')"
+      >
         <p class="truncate text-sm font-medium text-foreground" :title="title">
           {{ title }}
         </p>
@@ -56,7 +66,15 @@ const emit = defineEmits<{
     </div>
 
     <div class="flex items-center gap-2 shrink-0">
-      <span class="text-sm font-semibold tabular-nums text-foreground">
+      <span
+        class="text-sm font-semibold tabular-nums text-foreground cursor-pointer hover:underline select-none"
+        role="button"
+        tabindex="0"
+        :aria-label="`Edit nominal ${title}`"
+        @click="emit('edit')"
+        @keydown.enter.prevent="emit('edit')"
+        @keydown.space.prevent="emit('edit')"
+      >
         {{ formatIDR(amount) }}
       </span>
       <slot name="trailing" />

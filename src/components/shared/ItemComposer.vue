@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, useId } from 'vue'
+import { computed, nextTick, useId, watch } from 'vue'
 import { Plus, X } from '@lucide/vue'
 import RupiahInput from '@/components/shared/RupiahInput.vue'
 import { Button } from '@/components/ui/button'
@@ -8,33 +8,24 @@ import { type ItemFormSubmitData, useItemForm } from '@/composables/useItemForm'
 import type { Result } from '@/types/finance'
 
 interface Props {
-  titleId?: string
-  amountId?: string
-  errorId?: string
-  titlePlaceholder?: string
-  amountPlaceholder?: string
-  submitLabel?: string
-  isLimitReached?: boolean
-  limitMessage?: string
-  isEmergencyBuffer?: boolean
+  titleId?: string; amountId?: string; errorId?: string
+  titlePlaceholder?: string; amountPlaceholder?: string
+  submitLabel?: string; isLimitReached?: boolean
+  limitMessage?: string; isEmergencyBuffer?: boolean
   maxlength?: number
   onSubmit: (data: ItemFormSubmitData) => Result<unknown>
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  titleId: undefined,
-  amountId: undefined,
-  errorId: undefined,
-  titlePlaceholder: 'Nama item',
-  amountPlaceholder: '0',
-  submitLabel: 'Tambah',
-  isLimitReached: false,
-  limitMessage: undefined,
-  isEmergencyBuffer: false,
-  maxlength: 60,
+  titlePlaceholder: 'Nama item', amountPlaceholder: '0',
+  submitLabel: 'Tambah', maxlength: 60,
 })
 
-const emit = defineEmits<{ (e: 'success'): void }>()
+const emit = defineEmits<{
+  (e: 'success'): void
+  (e: 'titleChange', title: string): void
+}>()
+
 const fallbackId = useId()
 const tId = computed(() => props.titleId ?? `composer-title-${fallbackId}`)
 const aId = computed(() => props.amountId ?? `composer-amount-${fallbackId}`)
@@ -47,10 +38,11 @@ const { title, amount, error, submit, reset } = useItemForm(
     nextTick(() => document.getElementById(tId.value)?.focus())
   },
   (err) => {
-    const el = document.getElementById(err === 'TITLE_EMPTY' ? tId.value : aId.value)
-    el?.focus()
+    document.getElementById(err === 'TITLE_EMPTY' ? tId.value : aId.value)?.focus()
   },
 )
+
+watch(title, (val) => emit('titleChange', val))
 
 function onTitleKey(e: KeyboardEvent): void {
   if (e.key === 'Enter') {
@@ -58,8 +50,12 @@ function onTitleKey(e: KeyboardEvent): void {
     if (!amount.value) document.getElementById(aId.value)?.focus()
     else submit()
   } else if (e.key === 'Escape') {
-    if (title.value) title.value = ''
-    else (e.target as HTMLElement).blur()
+    if (title.value) {
+      e.preventDefault()
+      title.value = ''
+    } else {
+      (e.target as HTMLElement).blur()
+    }
   }
 }
 
@@ -67,9 +63,6 @@ function onAmountKey(e: KeyboardEvent): void {
   if (e.key === 'Enter') {
     e.preventDefault()
     submit()
-  } else if (e.key === 'Escape') {
-    if (amount.value !== null) amount.value = null
-    else (e.target as HTMLElement).blur()
   }
 }
 
@@ -79,6 +72,7 @@ function clearTitle(): void {
 }
 
 defineExpose({
+  getTitle: () => title.value,
   setTitle: (val: string) => { title.value = val },
   focusAmount: () => nextTick(() => document.getElementById(aId.value)?.focus()),
   reset,
@@ -107,8 +101,9 @@ defineExpose({
             v-if="title"
             type="button"
             tabindex="-1"
-            aria-label="Hapus isi judul"
+            aria-label="Hapus isi"
             class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            @mousedown.prevent
             @click="clearTitle"
           >
             <X class="size-4" aria-hidden="true" />

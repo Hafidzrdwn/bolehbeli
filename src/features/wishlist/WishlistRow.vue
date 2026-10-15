@@ -17,6 +17,7 @@ const props = defineProps<Props>()
 const emit = defineEmits<{
   (e: 'toggle', id: string): void
   (e: 'remove', id: string): void
+  (e: 'edit', item: WishlistItem): void
 }>()
 
 const switchId = useId()
@@ -37,6 +38,7 @@ function handleLabelClick(event: MouseEvent): void {
     :selected="item.selected"
     :label-for="switchId"
     @label-click="handleLabelClick"
+    @edit="emit('edit', item)"
   >
     <template #trailing>
       <Switch

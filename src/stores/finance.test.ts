@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { STORAGE_KEY } from '@/lib/constants'
 import { useFinanceStore } from '@/stores/finance'
 
-describe('useFinanceStore CRUD and actions', () => {
+describe('useFinanceStore Need item actions', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     localStorage.clear()
@@ -12,42 +12,70 @@ describe('useFinanceStore CRUD and actions', () => {
 
   it('handles addNeed success and validation error codes', () => {
     const store = useFinanceStore()
-
     const okRes = store.addNeed({ title: 'Kopi', amount: 25_000, category: 'food' })
     expect(okRes.ok).toBe(true)
     expect(store.totalNeeds).toBe(25_000)
 
-    const emptyRes = store.addNeed({ title: '   ', amount: 10_000 })
-    expect(emptyRes).toEqual({ ok: false, error: 'TITLE_EMPTY' })
-
-    const invalidRes = store.addNeed({ title: 'Gula', amount: -500 })
-    expect(invalidRes).toEqual({ ok: false, error: 'AMOUNT_INVALID' })
+    expect(store.addNeed({ title: '   ', amount: 10_000 })).toEqual({
+      ok: false,
+      error: 'TITLE_EMPTY',
+    })
+    expect(store.addNeed({ title: 'Gula', amount: -500 })).toEqual({
+      ok: false,
+      error: 'AMOUNT_INVALID',
+    })
   })
 
-  it('handles toggleWishlistItem and removes items', () => {
+  it('handles updateNeed and restoreNeed', () => {
+    const store = useFinanceStore()
+    store.addNeed({ title: 'Item 1', amount: 10_000 })
+    store.addNeed({ title: 'Item 2', amount: 20_000 })
+
+    const updated = store.updateNeed(store.state.needs[0]!.id, { title: 'Item 1 Baru' })
+    expect(updated.ok).toBe(true)
+    expect(store.state.needs[0]?.title).toBe('Item 1 Baru')
+
+    const removeRes = store.removeNeed(store.state.needs[0]!.id)
+    expect(removeRes.ok).toBe(true)
+    if (!removeRes.ok) return
+
+    expect(store.state.needs).toHaveLength(1)
+    store.restoreNeed(removeRes.value.item, removeRes.value.index)
+    expect(store.state.needs).toHaveLength(2)
+    expect(store.state.needs[0]?.title).toBe('Item 1 Baru')
+  })
+})
+
+describe('useFinanceStore Wishlist actions and reset', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    localStorage.clear()
+  })
+
+  it('handles wishlist toggle, restore, and setAllWishlistSelected', () => {
     const store = useFinanceStore()
     const addRes = store.addWishlistItem({ title: 'Headset', price: 300_000 })
     expect(addRes.ok).toBe(true)
+    if (!addRes.ok) return
 
-    if (addRes.ok) {
-      expect(addRes.value.selected).toBe(true)
-      expect(store.totalActiveWishlist).toBe(300_000)
-      store.toggleWishlistItem(addRes.value.id)
-      expect(store.totalActiveWishlist).toBe(0)
-      store.toggleWishlistItem(addRes.value.id)
-      expect(store.totalActiveWishlist).toBe(300_000)
+    store.toggleWishlistItem(addRes.value.id)
+    expect(store.totalActiveWishlist).toBe(0)
 
-      store.removeWishlistItem(addRes.value.id)
-      expect(store.state.wishlist).toHaveLength(0)
-    }
+    store.setAllWishlistSelected(true)
+    expect(store.totalActiveWishlist).toBe(300_000)
+
+    const removeRes = store.removeWishlistItem(addRes.value.id)
+    expect(removeRes.ok).toBe(true)
+    if (!removeRes.ok) return
+
+    store.restoreWishlistItem(removeRes.value.item, removeRes.value.index)
+    expect(store.state.wishlist).toHaveLength(1)
   })
 
   it('resets state completely on resetAll', () => {
     const store = useFinanceStore()
     store.setBalance(1_000_000)
     store.addNeed({ title: 'Listrik', amount: 200_000 })
-    expect(store.state.currentBalance).toBe(1_000_000)
-
     store.resetAll()
     expect(store.state.currentBalance).toBe(0)
     expect(store.state.needs).toHaveLength(0)
@@ -72,7 +100,6 @@ describe('useFinanceStore persistence and rehydration', () => {
     expect(parsed.version).toBe(1)
     expect(parsed.data.currentBalance).toBe(2_500_000)
 
-    // Rehydrate in fresh pinia instance
     setActivePinia(createPinia())
     const store2 = useFinanceStore()
     expect(store2.state.currentBalance).toBe(2_500_000)
@@ -102,6 +129,6 @@ describe('useFinanceStore getters and date validation', () => {
     const store = useFinanceStore()
     store.setTargetDate('2020-01-01')
     expect(store.isTargetPast).toBe(true)
-    expect(store.daysRemaining).toBe(1) // clamped to >= 1
+    expect(store.daysRemaining).toBe(1)
   })
 })

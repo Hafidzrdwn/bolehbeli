@@ -3,7 +3,6 @@ import type { DialogContentEmits, DialogContentProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { X } from '@lucide/vue'
 import { reactiveOmit } from '@vueuse/core'
-import { cva, type VariantProps } from 'class-variance-authority'
 import {
   DialogClose,
   DialogContent,
@@ -14,24 +13,8 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import SheetOverlay from './SheetOverlay.vue'
 
-const sheetVariants = cva(
-  'fixed z-50 gap-4 bg-card text-card-foreground shadow-xl dark:shadow-none transition ease-in-out data-open:animate-in data-closed:animate-out duration-200 outline-none',
-  {
-    variants: {
-      side: {
-        top: 'inset-x-0 top-0 border-b hairline data-closed:slide-out-to-top data-open:slide-in-from-top',
-        bottom: 'inset-x-0 bottom-0 border-t hairline rounded-t-2xl max-w-xl mx-auto pb-[calc(1.5rem+env(safe-area-inset-bottom))] data-closed:slide-out-to-bottom data-open:slide-in-from-bottom',
-        left: 'inset-y-0 left-0 h-full w-3/4 border-r hairline data-closed:slide-out-to-left data-open:slide-in-from-left sm:max-w-sm',
-        right: 'inset-y-0 right-0 h-full w-3/4 border-l hairline data-closed:slide-out-to-right data-open:slide-in-from-right sm:max-w-sm',
-      },
-    },
-    defaultVariants: {
-      side: 'bottom',
-    },
-  },
-)
-
-type SheetVariants = VariantProps<typeof sheetVariants>
+const sheetClass =
+  'fixed inset-x-0 bottom-0 z-50 mx-auto max-w-xl gap-4 rounded-t-2xl border-t hairline bg-card pb-[calc(1.5rem+env(safe-area-inset-bottom))] text-card-foreground shadow-xl dark:shadow-none outline-none'
 
 defineOptions({
   inheritAttrs: false,
@@ -41,7 +24,7 @@ const props = withDefaults(
   defineProps<
     DialogContentProps & {
       class?: HTMLAttributes['class']
-      side?: SheetVariants['side']
+      side?: 'top' | 'bottom' | 'left' | 'right'
       showCloseButton?: boolean
     }
   >(),
@@ -63,7 +46,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     <DialogContent
       data-slot="sheet-content"
       v-bind="{ ...$attrs, ...forwarded }"
-      :class="cn(sheetVariants({ side }), props.class)"
+      :class="cn(sheetClass, props.class)"
     >
       <slot />
 

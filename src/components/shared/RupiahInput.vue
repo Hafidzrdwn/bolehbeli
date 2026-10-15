@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
+import { X } from '@lucide/vue'
 import { useRupiahInput } from '@/composables/useRupiahInput'
 import { cn } from '@/lib/utils'
 
@@ -21,6 +22,11 @@ const props = withDefaults(defineProps<Props>(), {
   class: undefined,
 })
 
+const emit = defineEmits<{
+  (e: 'keydown', event: KeyboardEvent): void
+  (e: 'blur', event: FocusEvent): void
+}>()
+
 const modelValue = defineModel<number | null>({ default: null })
 const inputRef = ref<HTMLInputElement | null>(null)
 
@@ -32,6 +38,33 @@ const { displayValue, handleInput } = useRupiahInput(
 )
 
 const isHero = computed(() => props.variant === 'hero')
+const hasValue = computed(() => displayValue.value !== '' && displayValue.value !== '0')
+
+function handleFocus(e: FocusEvent): void {
+  const target = e.target as HTMLInputElement
+  target.select()
+  nextTick(() => {
+    target.setSelectionRange(0, target.value.length)
+  })
+}
+
+function handleKeydown(e: KeyboardEvent): void {
+  if (e.key === 'Escape') {
+    if (hasValue.value) {
+      e.preventDefault()
+      e.stopPropagation()
+      modelValue.value = null
+    } else {
+      inputRef.value?.blur()
+    }
+  }
+  emit('keydown', e)
+}
+
+function handleClear(): void {
+  modelValue.value = null
+  inputRef.value?.focus()
+}
 
 defineExpose({
   focus: () => inputRef.value?.focus(),
@@ -78,12 +111,26 @@ defineExpose({
       :aria-invalid="invalid"
       :class="
         cn(
-          'w-full bg-transparent tabular-nums outline-none disabled:cursor-not-allowed',
+          'w-full min-w-0 bg-transparent tabular-nums outline-none disabled:cursor-not-allowed',
           !isHero && 'h-full text-base font-medium',
           isHero && 'text-display font-semibold',
         )
       "
       @input="handleInput"
+      @focus="handleFocus"
+      @blur="emit('blur', $event)"
+      @keydown="handleKeydown"
     />
+    <button
+      v-if="hasValue && !disabled"
+      type="button"
+      tabindex="-1"
+      aria-label="Hapus isi"
+      class="ml-1.5 size-5 shrink-0 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground focus-visible:outline-none"
+      @mousedown.prevent
+      @click="handleClear"
+    >
+      <X class="size-3.5" aria-hidden="true" />
+    </button>
   </div>
 </template>

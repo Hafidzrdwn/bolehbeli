@@ -123,10 +123,6 @@ describe('buildMessage: danger status with selection', () => {
     expect(msg.headline).toBe('Skip dulu!')
     expect(msg.detail).toContain('Kurang')
     expect(msg.detail).toContain('untuk menutup kebutuhan wajib.')
-  })
-})
-
-describe('buildMessage: danger status without selection', () => {
   it('formats danger without selection', () => {
     const msg = buildMessage({
       status: 'danger',

@@ -4,12 +4,14 @@ import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { cspPlugin } from './build/csp-plugin.ts'
+import { cssOptimizePlugin } from './build/css-optimize-plugin.ts'
 
 export default defineConfig({
   plugins: [
     vue(),
     tailwindcss({ optimize: true }),
     cspPlugin(),
+    cssOptimizePlugin(),
     VitePWA({
       registerType: 'prompt',
       injectRegister: false,
@@ -61,6 +63,7 @@ export default defineConfig({
 
   build: {
     target: 'esnext',
+    cssMinify: 'lightningcss',
     modulePreload: {
       polyfill: false,
     },
@@ -74,7 +77,13 @@ export default defineConfig({
             id.includes('node_modules/@vueuse')
           )
             return 'vendor-vue'
-          if (id.includes('node_modules/zod')) return 'vendor-ui'
+          if (
+            id.includes('node_modules/zod') ||
+            id.includes('node_modules/tailwind-merge') ||
+            id.includes('node_modules/clsx') ||
+            id.includes('node_modules/class-variance-authority')
+          )
+            return 'vendor-ui'
         },
       },
     },
