@@ -8,7 +8,7 @@ import { cspPlugin } from './build/csp-plugin.ts'
 export default defineConfig({
   plugins: [
     vue(),
-    tailwindcss(),
+    tailwindcss({ optimize: true }),
     cspPlugin(),
     VitePWA({
       registerType: 'prompt',
@@ -49,20 +49,30 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      'workbox-window': 'workbox-window/build/workbox-window.prod.mjs',
     },
   },
+  define: {
+    __VUE_OPTIONS_API__: false,
+    __VUE_PROD_DEVTOOLS__: false,
+    __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
+  },
   build: {
+    target: 'esnext',
+    modulePreload: {
+      polyfill: false,
+    },
     rollupOptions: {
       output: {
         manualChunks: (id) => {
           if (
             id.includes('node_modules/vue') ||
+            id.includes('node_modules/@vue') ||
             id.includes('node_modules/pinia') ||
             id.includes('node_modules/@vueuse')
           )
             return 'vendor-vue'
-          if (id.includes('node_modules/reka-ui') || id.includes('node_modules/zod'))
-            return 'vendor-ui'
+          if (id.includes('node_modules/zod')) return 'vendor-ui'
         },
       },
     },

@@ -16,7 +16,8 @@
     "format": "prettier --write .",
     "generate-pwa-assets": "pwa-assets-generator",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "check:budget": "node scripts/check-budget.mjs"
   },
   "dependencies": {
     "@lucide/vue": "^1.56.0",

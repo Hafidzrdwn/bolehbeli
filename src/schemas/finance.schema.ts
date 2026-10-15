@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { boolean, enum as zEnum, number, object, string } from 'zod'
 import {
   DEFAULT_MIN_DAILY_BUDGET,
   EXPENSE_CATEGORIES,
@@ -9,21 +9,21 @@ import { endOfMonthISO, isValidISODate } from '@/lib/date'
 import { sanitizeTitle } from '@/lib/sanitize'
 import type { ExpenseItem, FinanceState, WishlistItem } from '@/types/finance'
 
-const amountSchema = z.number().int().min(0).max(MAX_AMOUNT)
-const titleSchema = z.string().transform(sanitizeTitle).pipe(z.string().min(1))
+const amountSchema = number().int().min(0).max(MAX_AMOUNT)
+const titleSchema = string().transform(sanitizeTitle).pipe(string().min(1))
 
-export const expenseItemSchema = z.object({
-  id: z.string().min(1).max(64),
+export const expenseItemSchema = object({
+  id: string().min(1).max(64),
   title: titleSchema,
   amount: amountSchema,
-  category: z.enum(EXPENSE_CATEGORIES).catch('other'),
+  category: zEnum(EXPENSE_CATEGORIES).catch('other'),
 })
 
-export const wishlistItemSchema = z.object({
-  id: z.string().min(1).max(64),
+export const wishlistItemSchema = object({
+  id: string().min(1).max(64),
   title: titleSchema,
   price: amountSchema,
-  selected: z.boolean().catch(false),
+  selected: boolean().catch(false),
 })
 
 export function createDefaultState(today: string): FinanceState {
@@ -75,13 +75,11 @@ export function parseFinanceState(input: unknown, today: string): FinanceState {
 
   const obj = input as Record<string, unknown>
   const currentBalance = amountSchema.catch(d.currentBalance).parse(obj.currentBalance)
-  const targetDate = z
-    .string()
+  const targetDate = string()
     .refine(isValidISODate)
     .catch(d.targetDate)
     .parse(obj.targetDate)
-  const bufferThreshold = z
-    .number()
+  const bufferThreshold = number()
     .int()
     .min(0)
     .max(MAX_AMOUNT)

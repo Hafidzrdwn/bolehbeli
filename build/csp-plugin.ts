@@ -18,17 +18,20 @@ export function cspPlugin(): Plugin {
   return {
     name: 'vite-plugin-csp',
     apply: 'build',
-    transformIndexHtml() {
-      return [
-        {
-          tag: 'meta',
-          attrs: {
-            'http-equiv': 'Content-Security-Policy',
-            content: CSP_DIRECTIVES.join('; '),
+    transformIndexHtml(html) {
+      return {
+        html: html.replace(/>\s+</g, '><').trim(),
+        tags: [
+          {
+            tag: 'meta',
+            attrs: {
+              'http-equiv': 'Content-Security-Policy',
+              content: CSP_DIRECTIVES.join('; '),
+            },
+            injectTo: 'head-prepend',
           },
-          injectTo: 'head-prepend',
-        },
-      ]
+        ],
+      }
     },
   }
 }
