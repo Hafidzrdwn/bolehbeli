@@ -2,11 +2,11 @@ import { createPinia, setActivePinia } from 'pinia'
 import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
-import NeedForm from '@/features/needs/NeedForm.vue'
+import NeedsSection from '@/features/needs/NeedsSection.vue'
 import { useFinanceStore } from '@/stores/finance'
 import { setupConsoleGuard } from '@/test/console-guard'
 
-describe('NeedForm: validation errors', () => {
+describe('NeedsSection: validation errors', () => {
   setupConsoleGuard()
 
   beforeEach(() => {
@@ -19,7 +19,7 @@ describe('NeedForm: validation errors', () => {
   })
 
   it('handles empty submission with inline error and focus without console errors', async () => {
-    const wrapper = mount(NeedForm, { attachTo: document.body })
+    const wrapper = mount(NeedsSection, { attachTo: document.body })
     await wrapper.find('button[type="submit"]').trigger('submit')
     await nextTick()
 
@@ -31,7 +31,7 @@ describe('NeedForm: validation errors', () => {
   })
 
   it('moves focus to amount input when title is filled but amount is invalid', async () => {
-    const wrapper = mount(NeedForm, { attachTo: document.body })
+    const wrapper = mount(NeedsSection, { attachTo: document.body })
     await wrapper.find('#need-title-input').setValue('Kopi')
     await wrapper.find('button[type="submit"]').trigger('submit')
     await nextTick()
@@ -44,7 +44,7 @@ describe('NeedForm: validation errors', () => {
   })
 })
 
-describe('NeedForm: valid submission', () => {
+describe('NeedsSection: valid submission', () => {
   setupConsoleGuard()
 
   beforeEach(() => {
@@ -58,7 +58,7 @@ describe('NeedForm: valid submission', () => {
 
   it('adds valid item to store, clears inputs, and returns focus to title', async () => {
     const store = useFinanceStore()
-    const wrapper = mount(NeedForm, { attachTo: document.body })
+    const wrapper = mount(NeedsSection, { attachTo: document.body })
     const titleInput = wrapper.find('#need-title-input')
     const amountInput = wrapper.find('#need-amount-input')
 

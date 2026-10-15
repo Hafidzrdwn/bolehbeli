@@ -2,11 +2,11 @@ import { createPinia, setActivePinia } from 'pinia'
 import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
-import WishlistForm from '@/features/wishlist/WishlistForm.vue'
+import WishlistSection from '@/features/wishlist/WishlistSection.vue'
 import { useFinanceStore } from '@/stores/finance'
 import { setupConsoleGuard } from '@/test/console-guard'
 
-describe('WishlistForm regression', () => {
+describe('WishlistSection regression', () => {
   setupConsoleGuard()
 
   beforeEach(() => {
@@ -22,7 +22,7 @@ describe('WishlistForm regression', () => {
     const store = useFinanceStore()
     expect(store.totalActiveWishlist).toBe(0)
 
-    const wrapper = mount(WishlistForm, {
+    const wrapper = mount(WishlistSection, {
       attachTo: document.body,
     })
 

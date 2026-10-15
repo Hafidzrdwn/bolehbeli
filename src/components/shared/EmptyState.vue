@@ -11,26 +11,21 @@ defineProps<Props>()
 </script>
 
 <template>
-  <div
-    class="flex flex-col items-center justify-center rounded-xl border border-dashed border-border/70 bg-card/40 p-6 text-center"
-  >
+  <div class="flex items-center gap-3 py-3 px-2 text-muted-foreground select-none">
     <div
       v-if="icon"
-      class="mb-3 flex size-10 items-center justify-center rounded-full bg-muted/60 text-muted-foreground"
+      class="flex size-7 shrink-0 items-center justify-center rounded-full bg-muted/60 text-muted-foreground"
       aria-hidden="true"
     >
-      <component :is="icon" class="size-5" />
+      <component :is="icon" class="size-3.5" />
     </div>
 
-    <h3 class="text-sm font-semibold text-foreground">
-      {{ title }}
-    </h3>
+    <div class="min-w-0 flex-1 text-xs">
+      <span class="font-medium text-foreground/80">{{ title }}</span>
+      <span v-if="description" class="ml-1 text-muted-foreground">· {{ description }}</span>
+    </div>
 
-    <p v-if="description" class="mt-1 max-w-xs text-xs text-muted-foreground">
-      {{ description }}
-    </p>
-
-    <div v-if="$slots.action" class="mt-3">
+    <div v-if="$slots.action" class="shrink-0">
       <slot name="action" />
     </div>
   </div>

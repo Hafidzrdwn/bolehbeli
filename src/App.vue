@@ -54,17 +54,11 @@ const hubElement = computed(() => hubRef.value?.el ?? null)
     />
 
     <div class="space-y-6 md:space-y-0 md:grid md:grid-cols-2 md:gap-6 md:items-start">
-      <div
-        v-show="layoutMode !== 'phone' || activeTab === 'needs'"
-        class="lg:max-h-[calc(100vh-14rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-1"
-      >
+      <div v-show="layoutMode !== 'phone' || activeTab === 'needs'">
         <NeedsSection />
       </div>
 
-      <div
-        v-show="layoutMode !== 'phone' || activeTab === 'wishlist'"
-        class="lg:max-h-[calc(100vh-14rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-1"
-      >
+      <div v-show="layoutMode !== 'phone' || activeTab === 'wishlist'">
         <WishlistSection />
       </div>
     </div>

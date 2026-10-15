@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import WishlistItemRow from '@/features/wishlist/WishlistItemRow.vue'
+import WishlistRow from '@/features/wishlist/WishlistRow.vue'
 import { setupConsoleGuard } from '@/test/console-guard'
 import type { WishlistItem } from '@/types/finance'
 
@@ -11,11 +11,11 @@ const sampleItem: WishlistItem = {
   selected: true,
 }
 
-describe('WishlistItemRow: switch interactions', () => {
+describe('WishlistRow: switch interactions', () => {
   setupConsoleGuard()
 
   it('emits toggle event exactly once per switch click and twice when clicked twice', async () => {
-    const wrapper = mount(WishlistItemRow, {
+    const wrapper = mount(WishlistRow, {
       props: { item: sampleItem, baselineDailyBudget: 50_000 },
     })
 
@@ -29,21 +29,22 @@ describe('WishlistItemRow: switch interactions', () => {
   })
 })
 
-describe('WishlistItemRow: title and remove interactions', () => {
+describe('WishlistRow: title and remove interactions', () => {
   setupConsoleGuard()
 
   it('emits toggle event when clicking on title label', async () => {
-    const wrapper = mount(WishlistItemRow, {
+    const wrapper = mount(WishlistRow, {
       props: { item: sampleItem, baselineDailyBudget: 50_000 },
     })
 
-    await wrapper.find('p.truncate').trigger('click')
+    const titleEl = wrapper.find('p.truncate')
+    await titleEl.trigger('click')
     expect(wrapper.emitted('toggle')).toHaveLength(1)
     expect(wrapper.emitted('toggle')?.[0]).toEqual(['wish-1'])
   })
 
   it('emits remove event when clicking remove button', async () => {
-    const wrapper = mount(WishlistItemRow, {
+    const wrapper = mount(WishlistRow, {
       props: { item: sampleItem, baselineDailyBudget: 50_000 },
     })
 
