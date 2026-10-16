@@ -202,6 +202,21 @@
   color: var(--muted-foreground);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .row-fade-enter-active,
+  .row-fade-leave-active {
+    transition: opacity 150ms ease-out, transform 150ms ease-out;
+  }
+  .row-fade-enter-from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  .row-fade-leave-to {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

@@ -6,12 +6,22 @@ Aplikasi ini dirancang untuk mencegah keputusan belanja impulsif dengan mensimul
 
 ---
 
-## ✨ Fitur Utama
+## ✨ Fitur Utama 
 
 - **Pure Decision Engine**: Logika penentu status keputusan (*Aman/Bungkus*, *Waspada/Pikir Dulu*, atau *Skip Dulu*) deterministik 100% menggunakan aritmatika integer Rupiah murni tanpa risiko drift desimal/floating-point.
-- **Multi-Item Wishlist Simulator**: Simulasi kombinasi belanja dengan toggle checkbox per item dan indikator setara jatah hidup harian (*budget-days*).
+- **Tiga Mode Tata Letak Responsif**:
+  - **Phone (< 768 px)**: Segmented control tab Kebutuhan & Wishlist, dock mengambang di bawah yang dapat diketuk untuk membuka Decision Sheet.
+  - **Tablet (768–1023 px)**: Dua kolom daftar sejajar dengan hero saldo dan chip tanggal terpisah.
+  - **Desktop (≥ 1024 px)**: Kolom daftar mandiri dengan scroll halus di kiri, dan panel hasil keputusan (*DecisionPanel*) sticky di sebelah kanan.
+- **Detail UX yang Halus**:
+  - **Clearable Fields**: Tombol silang (×) di setiap field teks & nominal dengan retensi fokus otomatis.
+  - **Toggleable Preset Chips**: Ketuk chip untuk memilih preset, ketuk kembali untuk melepas & mengosongkan judul.
+  - **Inline Balance Edit**: Ubah saldo langsung di hero tanpa membuka dialog; simpan dengan `Enter` atau batalkan dengan `Esc`.
+  - **Item Edit Sheet**: Ketuk baris untuk membuka sheet edit yang dimuat secara lazy.
+  - **Undo Delete Snackbar**: Notifikasi 5 detik dengan tombol "Urungkan" untuk mengembalikan item yang baru saja dihapus ke indeks semula.
+  - **Alur Keyboard Penuh**: Navigasi `Tab`, `Enter` antar-field dan submit, `Esc` untuk clear/blur.
 - **Sanity Meter**: Visualisasi alokasi proporsi saldo (Buffer Pengaman, Kebutuhan Wajib, Belanja Wishlist, dan Sisa Dana Bebas).
-- **Sticky Decision Bar**: Bar ringkasan keputusan mengambang di bawah layar yang otomatis aktif saat panel keputusan utama keluar dari viewport.
+- **Tipografi Modern**: Variable font self-hosted *Geist* dengan `tabular-nums` untuk tampilan angka finansial yang presisi dan nol FOUT.
 - **Offline-First & PWA**:
   - Banner instalasi otomatis di Android/Chrome dan petunjuk instalasi manual (*Add to Home Screen*) di iOS Safari.
   - Toast pembaruan versi baru Service Worker dengan transisi mulus dan notifikasi siap offline.
@@ -72,7 +82,7 @@ pnpm preview
 | `pnpm typecheck` | Menjalankan pemeriksaan tipe TypeScript tanpa emit kode |
 | `pnpm lint` | Menjalankan ESLint untuk seluruh file proyek |
 | `pnpm test:run` | Menjalankan unit test Vitest (sekali jalan) |
-| `pnpm check:budget` | Memvalidasi anggaran performa (Initial JS gzip ≤ 100 KB, CSS gzip ≤ 15 KB, Precache raw ≤ 400 KB) |
+| `pnpm check:budget` | Memvalidasi anggaran performa (Initial JS gzip ≤ 100 KB, CSS gzip ≤ 15 KB, Precache raw ≤ 435 KB) |
 
 ---
 

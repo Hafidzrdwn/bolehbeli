@@ -29,7 +29,7 @@ const showBanner = computed(() => isIdle.value && canInstall.value && !isStandal
       v-if="showBanner"
       role="region"
       aria-label="Ajakan pasang aplikasi"
-      class="flex items-center justify-between gap-3 rounded-xl border border-primary/25 bg-primary/10 p-3.5 text-foreground shadow-xs"
+      class="fixed top-3 left-4 right-4 z-50 mx-auto max-w-xl flex items-center justify-between gap-3 rounded-xl border border-primary/25 bg-card/95 p-3.5 text-foreground shadow-lg hairline"
     >
       <div class="flex items-center gap-3 min-w-0">
         <div

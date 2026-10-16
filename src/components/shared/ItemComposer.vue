@@ -17,8 +17,8 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  titlePlaceholder: 'Nama item', amountPlaceholder: '0',
-  submitLabel: 'Tambah', maxlength: 60,
+  titleId: undefined, amountId: undefined, errorId: undefined, limitMessage: undefined,
+  titlePlaceholder: 'Nama item', amountPlaceholder: '0', submitLabel: 'Tambah', maxlength: 60,
 })
 
 const emit = defineEmits<{

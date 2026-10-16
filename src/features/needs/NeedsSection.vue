@@ -112,9 +112,11 @@ function handleEdit(item: ExpenseItem): void {
         <EmptyState :icon="Receipt" title="Belum ada kebutuhan wajib" description="Tambahkan biaya pokok sampai target" />
       </div>
 
-      <ul
+      <TransitionGroup
         v-else
+        tag="ul"
         role="list"
+        name="row-fade"
         class="divide-y divide-border/40 lg:max-h-[calc(100dvh-20rem)] lg:overflow-y-auto lg:overscroll-contain [scrollbar-width:thin]"
       >
         <NeedRow
@@ -129,7 +131,7 @@ function handleEdit(item: ExpenseItem): void {
           @remove="handleRemoveNeed"
           @edit="handleEdit"
         />
-      </ul>
+      </TransitionGroup>
 
       <ItemEditSheet
         v-if="editingItem"
